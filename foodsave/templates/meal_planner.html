@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h2>Weekly Meal Planner</h2>
+        <p>Plan meals using food that you already have to reduce waste.</p>
+    </div>
+    <button class="btn btn-primary" onclick="document.getElementById('addMealModal').style.display='block'"><i class='bx bx-plus'></i> Add Meal</button>
+</div>
+
+<!-- Modal Form -->
+<div id="addMealModal" class="card" style="display: none; margin-bottom: 30px; border: 2px solid var(--primary-color);">
+    <h3 style="margin-bottom: 20px;">Add New Meal</h3>
+    <form method="POST" action="{{ url_for('meal_planner') }}" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: end;">
+        <div class="form-group" style="margin-bottom: 0;">
+            <label>Day</label>
+            <select name="day" class="form-control" required>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+                <option value="Sunday">Sunday</option>
+            </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+            <label>Meal Type</label>
+            <select name="meal_type" class="form-control" required>
+                <option value="Breakfast">Breakfast</option>
+                <option value="Lunch">Lunch</option>
+                <option value="Dinner">Dinner</option>
+            </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+            <label>Meal Name</label>
+            <input type="text" name="meal_name" class="form-control" required placeholder="e.g. Rice + Vegetables">
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+            <label>Ingredients (optional)</label>
+            <input type="text" name="ingredients" class="form-control" placeholder="e.g. Rice, Carrots">
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" class="btn btn-primary" style="flex: 1;">Save</button>
+            <button type="button" class="btn btn-outline" style="flex: 1;" onclick="document.getElementById('addMealModal').style.display='none'">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<div style="display: flex; gap: 30px; flex-wrap: wrap;">
+    <!-- Planner Grid -->
+    <div style="flex: 1; min-width: 300px;">
+        <div class="grid-cards" style="margin-top: 0; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+            {% for day, meals in planner.items() %}
+            <div class="card" style="padding: 0; overflow: hidden;">
+                <div style="background: var(--primary-color); color: white; padding: 15px; text-align: center; font-weight: 600;">
+                    {{ day }}
+                </div>
+                <div style="padding: 15px;">
+                    <!-- Breakfast -->
+                    <div style="margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                        <h4 style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 5px;">Breakfast</h4>
+                        {% for meal in meals['Breakfast'] %}
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div>
+                                    <span style="font-weight: 500;">{{ meal.meal_name }}</span>
+                                    {% if meal.ingredients %}<div style="font-size: 0.8rem; color: #888;">{{ meal.ingredients }}</div>{% endif %}
+                                </div>
+                                <form action="{{ url_for('delete_meal', id=meal.id) }}" method="POST">
+                                    <button type="submit" class="btn btn-text" style="padding: 0; color: var(--danger);"><i class='bx bx-x'></i></button>
+                                </form>
+                            </div>
+                        {% else %}
+                            <span style="color: #ccc; font-size: 0.9rem;">No meal planned</span>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Lunch -->
+                    <div style="margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                        <h4 style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 5px;">Lunch</h4>
+                        {% for meal in meals['Lunch'] %}
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div>
+                                    <span style="font-weight: 500;">{{ meal.meal_name }}</span>
+                                    {% if meal.ingredients %}<div style="font-size: 0.8rem; color: #888;">{{ meal.ingredients }}</div>{% endif %}
+                                </div>
+                                <form action="{{ url_for('delete_meal', id=meal.id) }}" method="POST">
+                                    <button type="submit" class="btn btn-text" style="padding: 0; color: var(--danger);"><i class='bx bx-x'></i></button>
+                                </form>
+                            </div>
+                        {% else %}
+                            <span style="color: #ccc; font-size: 0.9rem;">No meal planned</span>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Dinner -->
+                    <div>
+                        <h4 style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 5px;">Dinner</h4>
+                        {% for meal in meals['Dinner'] %}
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div>
+                                    <span style="font-weight: 500;">{{ meal.meal_name }}</span>
+                                    {% if meal.ingredients %}<div style="font-size: 0.8rem; color: #888;">{{ meal.ingredients }}</div>{% endif %}
+                                </div>
+                                <form action="{{ url_for('delete_meal', id=meal.id) }}" method="POST">
+                                    <button type="submit" class="btn btn-text" style="padding: 0; color: var(--danger);"><i class='bx bx-x'></i></button>
+                                </form>
+                            </div>
+                        {% else %}
+                            <span style="color: #ccc; font-size: 0.9rem;">No meal planned</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Available Food Sidebar -->
+    <div style="width: 100%; max-width: 300px;">
+        <div class="card" style="position: sticky; top: 90px; background: #f8fafc;">
+            <h3 style="margin-bottom: 15px; color: var(--primary-dark); border-bottom: 2px solid var(--primary-light); padding-bottom: 10px;">
+                <i class='bx bx-shopping-bag'></i> Available Food
+            </h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">Use these items to plan your meals.</p>
+            
+            <ul style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
+                {% for food in available_foods %}
+                <li style="padding: 8px 0; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between;">
+                    <span style="font-weight: 500;">{{ food.food_name }}</span>
+                    <span style="color: var(--text-muted); font-size: 0.8rem;">{{ food.quantity }}</span>
+                </li>
+                {% else %}
+                <li style="color: #ccc; text-align: center; padding: 20px 0;">No available food.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
