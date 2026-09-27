@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShoppingCart, UtensilsCrossed, Trash2, Bowl } from 'lucide-react';
+import { ShoppingCart, UtensilsCrossed, Trash2, Soup } from 'lucide-react';
 import { getFoods, getLeftovers, getWasteRecords } from '../utils/db';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js';
 import { Doughnut, Bar } from 'react-chartjs-2';
@@ -79,7 +79,7 @@ export default function Reports() {
                 </div>
                 
                 <div className="stat-card warning">
-                    <div className="stat-icon"><Bowl /></div>
+                    <div className="stat-icon"><Soup /></div>
                     <div className="stat-info">
                         <h4>Total Leftovers</h4>
                         <p>{leftoversTotal}</p>
